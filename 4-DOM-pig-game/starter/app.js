@@ -26,6 +26,8 @@ function newGame() {
     document.querySelector('#name-1').textContent = 'Player 2';
     document.querySelector('.player-0-panel').classList.add('active');
     document.querySelector('.player-1-panel').classList.remove('active');
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
 };
 
 newGame();
@@ -62,6 +64,8 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
     if (scores[activePlayer] >= 20) {
         //Show Winning Message
         document.querySelector('#name-' + activePlayer).textContent = 'WINNER!';
+        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
         //End Game
         document.querySelector('.btn-roll').style.display = 'none';
         document.querySelector('.btn-hold').style.display = 'none';
