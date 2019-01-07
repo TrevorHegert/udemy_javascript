@@ -22,8 +22,8 @@ function newGame() {
     document.getElementById('current-1').textContent = '0';
     document.querySelector('.btn-roll').style.display = 'block';
     document.querySelector('.btn-hold').style.display = 'block';
-    document.querySelector('#name-0').textContent = 'Player 1';
-    document.querySelector('#name-1').textContent = 'Player 2';
+    document.querySelector('#name-0').textContent = document.querySelector('#player1Name').value;
+    document.querySelector('#name-1').textContent = document.querySelector('#player2Name').value;
     document.querySelector('.player-0-panel').classList.add('active');
     document.querySelector('.player-1-panel').classList.remove('active');
     document.querySelector('.player-0-panel').classList.remove('winner');
@@ -61,11 +61,12 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
     //Update UI 
     document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
     //Check if Player has Won the Game
-    if (scores[activePlayer] >= 20) {
+    if (scores[activePlayer] >= 100) {
         //Show Winning Message
         document.querySelector('#name-' + activePlayer).textContent = 'WINNER!';
         document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
         document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+        document.querySelector('.dice').style.display = 'none';
         //End Game
         document.querySelector('.btn-roll').style.display = 'none';
         document.querySelector('.btn-hold').style.display = 'none';
@@ -86,4 +87,11 @@ function endTurn() {
 
 document.querySelector('.btn-new').addEventListener('click', function () {
     newGame();
+});
+
+document.querySelector('#start').addEventListener('click', function () {
+    document.querySelector('#name-0').textContent = document.querySelector('#player1Name').value;
+    document.querySelector('#name-1').textContent = document.querySelector('#player2Name').value;
+    document.querySelector('#rules').style.display = 'none';
+    document.querySelector('#game').style.display = 'block';
 })
