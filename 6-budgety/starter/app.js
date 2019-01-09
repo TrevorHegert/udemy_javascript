@@ -1,7 +1,28 @@
 //BUDGET CONTROLLER
 budgetController = (function () {
 
-    //SOME CODE
+    Expense = function (id, description, value) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+
+    Income = function (id, description, value) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+
+    data = {
+        allItems: {
+            exp: [],
+            inc: []
+        },
+        totals: {
+            exp: 0,
+            inc: 0
+        },
+    };
 
 })();
 
@@ -63,7 +84,7 @@ controller = (function (budgetCtrl, UICtrl) {
             console.log('Application Initiated');
             setupEventListeners();
         }
-    }
+    };
 
 })(budgetController, UIController);
 
