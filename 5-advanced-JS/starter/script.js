@@ -154,19 +154,105 @@
 /////////////////////////////////////////////////////////
 // Imediately Initiated Functions
 
-function game() {
-    var score = Math.random() * 10;
-    console.log(score >= 5);
-};
+// function game() {
+//     var score = Math.random() * 10;
+//     console.log(score >= 5);
+// };
 
-//game();
+// //game();
 
-(function () {
-    var score = Math.random() * 10;
-    console.log(score >= 5);
-})();
+// (function () {
+//     var score = Math.random() * 10;
+//     console.log(score >= 5);
+// })();
 
-(function (goodLuck) {
-    var score = Math.floor(Math.random() * 10) + 1;
-    console.log(score >= 5 - goodLuck);
-})(5);
+// (function (goodLuck) {
+//     var score = Math.floor(Math.random() * 10) + 1;
+//     console.log(score >= 5 - goodLuck);
+// })(5);
+
+
+
+////////////////////////////////////////////////////////
+// Closures
+
+// function retirement(retirementAge) {
+//     let a = ' years left until retirement.';
+//     return function (yearOfBirth) {
+//         let age = 2019 - yearOfBirth;
+//         console.log((retirementAge - age) + a);
+//     }
+// }
+
+// const retirementUS = retirement(66);
+// const retirementGermany = retirement(65);
+// const retirementIceland = retirement(67);
+// retirementUS(1990);
+// retirementGermany(1976);
+// retirementIceland(1983);
+
+// function interviewQuestion(job) {
+//     return function (name) {
+//         const greeting = 'Hello ' + name + ', ';
+//         if (job === 'designer') {
+//             console.log(greeting + 'can you explain what UX is?');
+//         } else if (job === 'teacher') {
+//             console.log(greeting + 'what subject do you teach?');
+//         } else {
+//             console.log(greeting + 'what do you do?');
+//         }
+//     }
+// }
+
+// var teacherQuestion = interviewQuestion('teacher');
+// var designerQuestion = interviewQuestion('designer');
+
+// teacherQuestion('Jane');
+// designerQuestion('John');
+// designerQuestion('Mark');
+
+// interviewQuestion('teacher')('Mary');
+
+////////////////////////////////////////////////////////////
+// Bind, Call and Apply
+
+let john = {
+    name: 'John',
+    age: 26,
+    job: 'teacher',
+    presentation: function (style, timeOfDay) {
+        if (style === 'formal') {
+            console.log('Good ' + timeOfDay + ' ladies and gentlemen! I\'m ' +
+                this.name + ', I\'m a ' + this.job + ', and I\'m ' + this.age + ' years old.');
+        } else if (style === 'friendly') {
+            console.log('Hey, What\'s up? I\'m ' + this.name + ', I\'m a ' + this.job + ', and I\'m ' + this.age + ' years old. have a good ' + timeOfDay + '.');
+        } else {
+            console.log();
+        }
+    }
+}
+
+john.presentation('formal', 'morning');
+
+const emily = {
+    name: 'Emily',
+    age: 35,
+    job: 'designer',
+}
+
+//Call Method
+john.presentation.call(emily, 'friendly', 'afternoon');
+
+//Apply Method (array format is necessary)
+john.presentation.apply(emily, ['formal', 'evening']);
+
+//Bind Method - to preset argument values
+
+const johnFriendly = john.presentation.bind(john, 'friendly'); //Bound 'friendly' to style argument
+johnFriendly('morning'); //no longer needed to provide style argument
+
+const emilyFormal = john.presentation.bind(emily, 'formal'); //Bound emily & 'formal'
+emilyFormal('evening');
+
+johnFormal = john.presentation('formal', 'morning');
+console.log(johnFormal);
