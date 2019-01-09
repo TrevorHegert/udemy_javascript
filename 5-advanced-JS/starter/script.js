@@ -253,6 +253,3 @@ johnFriendly('morning'); //no longer needed to provide style argument
 
 const emilyFormal = john.presentation.bind(emily, 'formal'); //Bound emily & 'formal'
 emilyFormal('evening');
-
-johnFormal = john.presentation('formal', 'morning');
-console.log(johnFormal);
