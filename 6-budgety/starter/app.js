@@ -16,8 +16,25 @@ UIController = (function () {
 //GLOBAL APP CONTROLLER
 controller = (function (budgetCtrl, UICtrl) {
 
-    document.querySelector('.add__btn').addEventListener('click', function () {
-        console.log('Clicked');
+    ctrlAddItem = () => {
+        //Get Input Data from Field
+
+        //Add item to the budget controller
+
+        //Add item to the UI
+
+        //Calculate the budget
+
+        //Display the budget on UI
+
+        console.log('It Works!')
+    };
+
+    document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+
+    document.addEventListener('keypress', function (event) {
+        ctrlAddItem();
+
     });
 
 })(budgetController, UIController);
