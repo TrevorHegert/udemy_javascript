@@ -97,26 +97,55 @@
 ///////////////////////////////////////////////////////////////
 // Passing Functions as Arguments
 
-var years = [1990, 1965, 1937, 2005, 1998];
+// var years = [1990, 1965, 1937, 2005, 1998];
 
-function arrayCalc(arr, fn) {
-    var arrRes = [];
-    for (i = 0; 1 < arr.length; i++) {
-        arrRes.push(fn(arr[i]));
-    };
-    return arrRes;
-};
+// function arrayCalc(arr, fn) {
+//     var arrRes = [];
+//     for (i = 0; 1 < arr.length; i++) {
+//         arrRes.push(fn(arr[i]));
+//     };
+//     return arrRes;
+// };
 
-function calculateAge(el) {
-    return 2016 - el;
-};
+// function calculateAge(el) {
+//     return 2016 - el;
+// };
 
-function isAdult(el) {
-    return el >= 18;
-}
+// function isAdult(el) {
+//     return el >= 18;
+// }
 
 // var ages = arrayCalc(years, calculateAge);
 // // console.log(ages);
 
 // var adults = arrayCalc(years, isAdult);
 // console.log(adults);
+
+
+/////////////////////////////////////////////////
+// Functions returning Functions
+
+function interviewQuestion(job) {
+    if (job === 'designer') {
+        return function (name) {
+            console.log(name + ', can you please explain what UX design is?');
+        }
+    } else if (job === 'teacher') {
+        return function (name) {
+            console.log('What subject do you teach, ' + name + '?');
+        }
+    } else {
+        return function (name) {
+            console.log('Hello, ' + name + '. What do you do?');
+        }
+    }
+}
+
+var teacherQuestion = interviewQuestion('teacher');
+var designerQuestion = interviewQuestion('designer');
+
+teacherQuestion('Jane');
+designerQuestion('John');
+designerQuestion('Mark');
+
+interviewQuestion('teacher')('Mary');
