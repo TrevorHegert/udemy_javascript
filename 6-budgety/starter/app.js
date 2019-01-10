@@ -1,69 +1,30 @@
-//BUDGET CONTROLLER
-budgetController = (function () {
+//////////////////////////////////////////////////
+// Budget Calculation Module
 
-    Expense = function (id, description, value) {
-        this.id = id;
-        this.description = description;
-        this.value = value;
-    };
+var budgetController = (function () {
 
-    Income = function (id, description, value) {
-        this.id = id;
-        this.description = description;
-        this.value = value;
-    };
-
-    data = {
-        allItems: {
-            exp: [],
-            inc: []
-        },
-        totals: {
-            exp: 0,
-            inc: 0
-        },
-    };
-
-    return {
-        addItem: function (type, des, val) {
-            if (data.allItems[type].length > 0) {
-                ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
-            } else {
-                ID = 1;
-            }
-
-            if (type === 'exp') {
-                newItem = new Expense(ID, des, val);
-            } else if (type === 'inc') {
-                newItem = new Income(ID, des, val);
-            }
-
-            data.allItems[type].push(newItem);
-            return newItem;
-        },
-
-        testing: function () {
-            return newItem;
-        }
-    };
 
 })();
 
-//UI CONTROLLER
-UIController = (function () {
 
-    DOMstrings = {
+//////////////////////////////////////////////////
+// UI Interface Module
+
+var UIController = (function () {
+
+    var DOMstrings = {
         inputType: '.add__type',
         inputDescription: '.add__description',
-        inputValue: '.add__value'
+        inputValue: '.add__value',
+        inputBtn: '.add__btn'
     };
 
     return {
         getInput: function () {
             return {
-                type: document.querySelector(DOMstrings.inputType).value, //Will be inc/exp
+                type: document.querySelector(DOMstrings.inputType).value,
                 description: document.querySelector(DOMstrings.inputDescription).value,
-                value: document.querySelector(DOMstrings.inputValue).value,
+                value: document.querySelector(DOMstrings.inputValue).value
             };
         },
 
@@ -71,44 +32,37 @@ UIController = (function () {
             return DOMstrings;
         }
     };
-
 })();
 
-//GLOBAL APP CONTROLLER
-controller = (function (budgetCtrl, UICtrl) {
 
-    setupEventListeners = function () {
-        DOM = UICtrl.getDOMstrings();
-        document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
 
-        document.addEventListener('keypress', function (event) {
-            if (event.keyCode === 13) {
-                ctrlAddItem();
-            }
-        });
+//////////////////////////////////////////////////
+// Command Module
+
+var controller = (function (budgetCtrl, UICtrl) {
+
+    var DOM = UICtrl.getDOMstrings();
+
+    var ctrlAddItem = function () {
+
+        //1. Get the user input
+        var input = UICtrl.getInput();
+        console.log(input);
+        //2. Handoff item to budget controller
+
+        //3. Add new item to UI
+
+        //4. Calculate the Budget
+
+        //5. Display Budget to UI 
     };
 
-    ctrlAddItem = function () {
-        //Get Input Data from Field
-        input = UICtrl.getInput();
+    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
-        //Add item to the budget controller
-        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
-        //Add item to the UI
-
-        //Calculate the budget
-
-        //Display the budget on UI
-
-    };
-
-    return {
-        init: function () {
-            console.log('Application Initiated');
-            setupEventListeners();
+    document.addEventListener('keypress', function (event) {
+        if (event.keyCode === 13 || event.which === 13) {
+            ctrlAddItem();
         }
-    };
+    });
 
 })(budgetController, UIController);
-
-controller.init();
