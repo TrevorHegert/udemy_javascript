@@ -82,7 +82,6 @@ var UIController = (function () {
 })();
 
 
-
 //////////////////////////////////////////////////
 // Command Module
 
@@ -123,8 +122,15 @@ var controller = (function (budgetCtrl, UICtrl) {
             console.log('Application started.');
             setupEventListeners();
         }
+
     };
 
-})(budgetController, UIController);
+    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
-controller.init();
+    document.addEventListener('keypress', function (event) {
+        if (event.keyCode === 13 || event.which === 13) {
+            ctrlAddItem();
+        }
+    });
+
+})(budgetController, UIController);
