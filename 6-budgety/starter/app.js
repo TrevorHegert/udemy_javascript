@@ -149,19 +149,22 @@ var controller = (function(budgetCtrl, UICtrl) {
     input = UICtrl.getInput();
     console.log("Click");
 
-    //2. Handoff item to budget controller
-    newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+    //If values have been entered, then continue
+    if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
+      //2. Handoff item to budget controller
+      newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
-    //3. Add new item to UI
-    UICtrl.addListItem(newItem, input.type);
+      //3. Add new item to UI
+      UICtrl.addListItem(newItem, input.type);
 
-    //3.5. Clear the Previous Items
-    UICtrl.clearFields();
+      //3.5. Clear the Previous Items
+      UICtrl.clearFields();
 
-    //4. Calculate  and update the Budget
-    updateBudget();
+      //4. Calculate  and update the Budget
+      updateBudget();
 
-    //5. Display Budget to UI
+      //5. Display Budget to UI
+    }
   };
 
   return {
