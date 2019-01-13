@@ -6,6 +6,21 @@ var budgetController = (function () {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
+  };
+
+  //Add List Item percentage calculator to Expense prototype
+  Expense.prototype.calcPercentage = function (totalIncome) {
+    if (totalIncome > 0) {
+      this.percentage = Math.round((this.value / totalIncome) * 100);
+    } else {
+      this.percentage = -1;
+    }
+  };
+
+  //Retrive List Item Percentage
+  Expense.prototype.getPercentage = function () {
+    return this.percentage;
   };
 
   var Income = function (id, description, value) {
@@ -92,6 +107,21 @@ var budgetController = (function () {
       }
     },
 
+    //Calculate Percentages For List Items
+    calculatePercentages: function () {
+      data.allItems.exp.forEach(function (current) {
+        current.calcPercentage(data.totals.inc);
+      });
+    },
+
+    //Get Percentages for List Items
+    getPercentages: function () {
+      var allPercentages = data.allItems.exp.map(function (current) {
+        return current.getPercentage();
+      });
+      return allPercentages;
+    },
+
     //Export Budget Data as an Object
     getBudget: function () {
       return {
@@ -150,17 +180,17 @@ var UIController = (function () {
       if (type === "inc") {
         element = DOMstrings.incomeContainer;
         html =
-          '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">+ $ %value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       } else if (type === "exp") {
         element = DOMstrings.expenseContainer;
         html =
-          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+          '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">- $ %value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
       //2. Replace the placeholder text with actual data
       newHtml = html.replace("%id%", obj.id);
       newHtml = newHtml.replace("%description%", obj.description);
-      newHtml = newHtml.replace("%value%", obj.value);
+      newHtml = newHtml.replace("%value%", (obj.value.toFixed(2)));
 
       //3. Insert the HTML into the DOM
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
@@ -192,11 +222,11 @@ var UIController = (function () {
     //Accept and Insert new data for Budget display
     displayBudget: function (obj) {
       document.querySelector(DOMstrings.budgetLabel).textContent =
-        "$ " + obj.budget;
+        "$ " + (obj.budget).toFixed(2);
       document.querySelector(DOMstrings.incomeLabel).textContent =
-        "$ " + obj.totalInc;
+        "$ " + (obj.totalInc).toFixed(2);
       document.querySelector(DOMstrings.expenseLabel).textContent =
-        "$ " + obj.totalExp;
+        "$ " + (obj.totalExp).toFixed(2);
       if (obj.percentage > 0) {
         document.querySelector(DOMstrings.expensePercentage).textContent =
           obj.percentage + "%";
@@ -244,6 +274,18 @@ var controller = (function (budgetCtrl, UICtrl) {
     UICtrl.displayBudget(budget);
   };
 
+  //Get Calculated Percentage data from Budget Module and export to UI Module
+  var updatePercentages = function () {
+    //1. Calculate percentages
+    budgetCtrl.calculatePercentages();
+
+    //2. Return percentages
+    var percentages = budgetCtrl.getPercentages();
+
+    //3. Display the percentages in the UI
+    console.log(percentages);
+  };
+
   //Receive Input Data, Send To Budget Module for calculations and send results to UI Module for display
   var ctrlAddItem = function () {
     var input, newItem;
@@ -265,6 +307,9 @@ var controller = (function (budgetCtrl, UICtrl) {
 
       //6. Calculate budget and update the UI
       updateBudget();
+
+      //7. Calculate percentages and update the UI
+      updatePercentages();
     }
   };
 
@@ -290,6 +335,9 @@ var controller = (function (budgetCtrl, UICtrl) {
 
       //3. Update the budget and display to UI
       updateBudget();
+
+      //4. Calculate percentages and update the UI
+      updatePercentages();
     }
 
   };
