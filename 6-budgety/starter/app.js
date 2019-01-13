@@ -141,7 +141,7 @@ var UIController = (function () {
       };
     },
 
-    //Accept and Insert a new income or expense list item into the HTML code
+    //Accept and Insert a new income or expense list item into the HTML
     addListItem: function (obj, type) {
       var html, newHtml, element;
 
@@ -164,6 +164,12 @@ var UIController = (function () {
 
       //3. Insert the HTML into the DOM
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
+    },
+
+    //Remove an item from the income or expenses list HTML
+    deletelistItem: function (selectorID) {
+      var el = document.getElementById(selectorID);
+      el.parentNode.removeChild(el);
     },
 
     //Clear the input fields of user entered data
@@ -278,9 +284,12 @@ var controller = (function (budgetCtrl, UICtrl) {
 
       //1. Delete the item from the stored budget data object
       budgetCtrl.deleteItem(type, ID);
+
       //2. Delete the item from the UI
+      UICtrl.deletelistItem(itemID);
 
       //3. Update the budget and display to UI
+      updateBudget();
     }
 
   };
