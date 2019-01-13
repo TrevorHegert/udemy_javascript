@@ -246,9 +246,25 @@ var controller = (function (budgetCtrl, UICtrl) {
   };
 
   var ctrlDeleteItem = function (event) {
-    var itemID;
+    var itemID, splitID, type, ID;
 
-    console.log(event.target.parentNode.parentNode.parentNode.parentNode.id);
+    //Grab the Type and ID from HTML
+    itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+    //if item has id attribute (only delete button has an id in html) then format its type and data for use
+    if (itemID) {
+      //'type-id'
+      splitID = itemID.split('-');
+      //['type', 'id']
+      type = splitID[0];
+      ID = splitID[1];
+
+      //1. Delete the item from the stored budget data object
+
+      //2. Delete the item from the UI
+
+      //3. Update the budget and display to UI
+    }
 
   };
 
