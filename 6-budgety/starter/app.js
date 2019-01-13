@@ -58,6 +58,23 @@ var budgetController = (function () {
       return newItem;
     },
 
+    deleteItem: function (type, id) {
+      var ids, index;
+
+      //identify correct index of array
+      ids = data.allItems[type].map(function (current) {
+        return current.id;
+      });
+
+      //save that index to a variable
+      index = ids.indexOf(id);
+
+      if (index !== -1) {
+        data.allItems[type].splice(index, 1);
+      }
+
+    },
+
     //Calculate Total Expenses and Incomes, determine remainging budget amount and used percentage
     calculateBudget: function () {
       //1. Calculate Total Sums for Incomes and Expenses
@@ -257,10 +274,10 @@ var controller = (function (budgetCtrl, UICtrl) {
       splitID = itemID.split('-');
       //['type', 'id']
       type = splitID[0];
-      ID = splitID[1];
+      ID = parseInt(splitID[1]);
 
       //1. Delete the item from the stored budget data object
-
+      budgetCtrl.deleteItem(type, ID);
       //2. Delete the item from the UI
 
       //3. Update the budget and display to UI
