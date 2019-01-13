@@ -154,10 +154,12 @@ var UIController = (function() {
     },
 
     displayBudget: function(obj) {
-      document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-      document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
+      document.querySelector(DOMstrings.budgetLabel).textContent =
+        "$ " + obj.budget;
+      document.querySelector(DOMstrings.incomeLabel).textContent =
+        "$ " + obj.totalInc;
       document.querySelector(DOMstrings.expenseLabel).textContent =
-        obj.totalExp;
+        "$ " + obj.totalExp;
       if (obj.percentage > 0) {
         document.querySelector(DOMstrings.expensePercentage).textContent =
           obj.percentage + "%";
@@ -216,10 +218,8 @@ var controller = (function(budgetCtrl, UICtrl) {
       //3.5. Clear the Previous Items
       UICtrl.clearFields();
 
-      //4. Calculate  and update the Budget
+      //4. Calculate budget and update the UI
       updateBudget();
-
-      //5. Display Budget to UI
     }
   };
 
