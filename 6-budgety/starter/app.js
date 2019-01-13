@@ -1,22 +1,22 @@
 //////////////////////////////////////////////////
 // Budget Calculation Module
 
-var budgetController = (function() {
-  var Expense = function(id, description, value) {
+var budgetController = (function () {
+  var Expense = function (id, description, value) {
     this.id = id;
     this.description = description;
     this.value = value;
   };
 
-  var Income = function(id, description, value) {
+  var Income = function (id, description, value) {
     this.id = id;
     this.description = description;
     this.value = value;
   };
 
-  var calculateTotal = function(type) {
+  var calculateTotal = function (type) {
     var sum = 0;
-    data.allItems[type].forEach(function(current) {
+    data.allItems[type].forEach(function (current) {
       sum = sum + current.value;
     });
     data.totals[type] = sum;
@@ -35,8 +35,10 @@ var budgetController = (function() {
     percentage: -1
   };
 
+
+  //Methods to be made available to other modules
   return {
-    addItem: function(type, des, val) {
+    addItem: function (type, des, val) {
       var newItem, ID;
 
       if (data.allItems[type].length > 0) {
@@ -56,13 +58,14 @@ var budgetController = (function() {
       return newItem;
     },
 
-    calculateBudget: function() {
+    //Calculate Total Expenses and Incomes, determine remainging budget amount and used percentage
+    calculateBudget: function () {
       //1. Calculate Total Sums for Incomes and Expenses
       calculateTotal("exp");
       calculateTotal("inc");
 
       //2. Calculate the budget (total income - total expenses)
-      data.budget = data.totals.inc;
+      data.budget = data.totals.inc - data.totals.exp;
 
       //3. Calculate the percentage of income that we spent
       if (data.totals.inc > 0) {
@@ -72,7 +75,8 @@ var budgetController = (function() {
       }
     },
 
-    getBudget: function() {
+    //Export Budget Data as an Object
+    getBudget: function () {
       return {
         budget: data.budget,
         totalInc: data.totals.inc,
@@ -81,7 +85,8 @@ var budgetController = (function() {
       };
     },
 
-    testing: function() {
+    //Developer Testing Method, Unnecessary for Application Functionality
+    testing: function () {
       console.log(data);
     }
   };
@@ -90,7 +95,9 @@ var budgetController = (function() {
 //////////////////////////////////////////////////
 // UI Interface Module
 
-var UIController = (function() {
+var UIController = (function () {
+
+  //Keep all class selector elements here to simplify future changes to HTML 
   var DOMstrings = {
     inputType: ".add__type",
     inputDescription: ".add__description",
@@ -101,11 +108,15 @@ var UIController = (function() {
     budgetLabel: ".budget__value",
     incomeLabel: ".budget__income--value",
     expenseLabel: ".budget__expenses--value",
-    expensePercentage: ".budget__expenses--percentage"
+    expensePercentage: ".budget__expenses--percentage",
+    container: ".container"
   };
 
+  //Methods to be made available to other modules
   return {
-    getInput: function() {
+
+    //Export Contents of Input Fields
+    getInput: function () {
       return {
         type: document.querySelector(DOMstrings.inputType).value,
         description: document.querySelector(DOMstrings.inputDescription).value,
@@ -113,10 +124,11 @@ var UIController = (function() {
       };
     },
 
-    addListItem: function(obj, type) {
+    //Accept and Insert a new income or expense list item into the HTML code
+    addListItem: function (obj, type) {
       var html, newHtml, element;
 
-      //Create HTML string with placeholder text
+      //1. Create HTML string with placeholder text
 
       if (type === "inc") {
         element = DOMstrings.incomeContainer;
@@ -128,16 +140,17 @@ var UIController = (function() {
           '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
 
-      //Replace the placeholder text with actual data
+      //2. Replace the placeholder text with actual data
       newHtml = html.replace("%id%", obj.id);
       newHtml = newHtml.replace("%description%", obj.description);
       newHtml = newHtml.replace("%value%", obj.value);
 
-      //Insert the HTML into the DOM
+      //3. Insert the HTML into the DOM
       document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
     },
 
-    clearFields: function() {
+    //Clear the input fields of user entered data
+    clearFields: function () {
       var fields, fieldsArray;
 
       fields = document.querySelectorAll(
@@ -146,14 +159,15 @@ var UIController = (function() {
 
       fieldsArray = Array.prototype.slice.call(fields);
 
-      fieldsArray.forEach(function(current, index, array) {
+      fieldsArray.forEach(function (current, index, array) {
         current.value = "";
       });
 
       fieldsArray[0].focus();
     },
 
-    displayBudget: function(obj) {
+    //Accept and Insert new data for Budget display
+    displayBudget: function (obj) {
       document.querySelector(DOMstrings.budgetLabel).textContent =
         "$ " + obj.budget;
       document.querySelector(DOMstrings.incomeLabel).textContent =
@@ -169,7 +183,8 @@ var UIController = (function() {
       }
     },
 
-    getDOMstrings: function() {
+    //Export HTML class name variables as an object for use by other modules
+    getDOMstrings: function () {
       return DOMstrings;
     }
   };
@@ -178,20 +193,26 @@ var UIController = (function() {
 //////////////////////////////////////////////////
 // Command Module
 
-var controller = (function(budgetCtrl, UICtrl) {
-  var setupEventListeners = function() {
+var controller = (function (budgetCtrl, UICtrl) {
+
+  //Setup Event Listeners to accept both a click on the input button or pressing the 'enter' key
+  var setupEventListeners = function () {
     var DOM = UICtrl.getDOMstrings();
 
     document.querySelector(DOM.inputBtn).addEventListener("click", ctrlAddItem);
 
-    document.addEventListener("keypress", function(event) {
+    document.addEventListener("keypress", function (event) {
       if (event.keyCode === 13 || event.which === 13) {
         ctrlAddItem();
       }
     });
+
+    document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+
   };
 
-  var updateBudget = function() {
+  //Get Calculated Budget data from Budget Module and export to UI Module
+  var updateBudget = function () {
     //1. Calculate Budget
     budgetCtrl.calculateBudget();
     //2. Return Budget
@@ -200,31 +221,39 @@ var controller = (function(budgetCtrl, UICtrl) {
     UICtrl.displayBudget(budget);
   };
 
-  var ctrlAddItem = function() {
+  //Receive Input Data, Send To Budget Module for calculations and send results to UI Module for display
+  var ctrlAddItem = function () {
     var input, newItem;
 
     //1. Get the user input
     input = UICtrl.getInput();
     console.log("Click");
 
-    //If values have been entered, then continue
+    //2. Check if values have been entered, before continuing
     if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
-      //2. Handoff item to budget controller
+      //3. Handoff item to budget controller
       newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
-      //3. Add new item to UI
+      //4. Add new item to UI
       UICtrl.addListItem(newItem, input.type);
 
-      //3.5. Clear the Previous Items
+      //5. Clear the Previous Items
       UICtrl.clearFields();
 
-      //4. Calculate budget and update the UI
+      //6. Calculate budget and update the UI
       updateBudget();
     }
   };
 
+  var ctrlDeleteItem = function (event) {
+
+    console.log(event.target);
+
+  };
+
+  //Initialization Function Resets all Budget Numbers and Alerts console to successful initialization
   return {
-    init: function() {
+    init: function () {
       console.log("Application started.");
       UICtrl.displayBudget({
         budget: 0,
@@ -237,4 +266,5 @@ var controller = (function(budgetCtrl, UICtrl) {
   };
 })(budgetController, UIController);
 
+//Initialize Application
 controller.init();
