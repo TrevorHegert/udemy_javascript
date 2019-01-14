@@ -180,6 +180,14 @@ var UIController = (function () {
     );
   };
 
+
+  //Reusable forEach method that can apply to Node Lists
+  var nodeListforEach = function (list, callback) {
+    for (i = 0; i < list.length; i++) {
+      callback(list[i], i);
+    }
+  };
+
   //Methods to be made available to other modules
   return {
     //Export Contents of Input Fields
@@ -266,13 +274,6 @@ var UIController = (function () {
         DOMstrings.expensesPercentageLabel
       );
 
-      //Reusable forEach method that can apply to Node Lists
-      var nodeListforEach = function (list, callback) {
-        for (i = 0; i < list.length; i++) {
-          callback(list[i], i);
-        }
-      };
-
       nodeListforEach(fields, function (current, index) {
         if (percentages[index] > 0) {
           current.textContent = percentages[index] + "%";
@@ -291,6 +292,20 @@ var UIController = (function () {
       year = now.getFullYear();
       document.querySelector(DOMstrings.dateLabel).textContent = month + ' ' + year;
 
+    },
+
+    changeType: function () {
+      var fields = document.querySelectorAll(
+        DOMstrings.inputType + ',' +
+        DOMstrings.inputDescription + ',' +
+        DOMstrings.inputValue
+      );
+
+      nodeListforEach(fields, function (current) {
+        current.classList.toggle('red-focus');
+      });
+
+      document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
     },
 
     //Export HTML class name variables as an object for use by other modules
@@ -316,9 +331,10 @@ var controller = (function (budgetCtrl, UICtrl) {
       }
     });
 
-    document
-      .querySelector(DOM.container)
-      .addEventListener("click", ctrlDeleteItem);
+    document.querySelector(DOM.container).addEventListener("click", ctrlDeleteItem);
+
+    document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changeType);
+
   };
 
   //Get Calculated Budget data from Budget Module and export to UI Module
