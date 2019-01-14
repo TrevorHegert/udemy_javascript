@@ -154,7 +154,8 @@ var UIController = (function () {
     expenseLabel: ".budget__expenses--value",
     expensePercentage: ".budget__expenses--percentage",
     container: ".container",
-    expensesPercentageLabel: ".item__percentage"
+    expensesPercentageLabel: ".item__percentage",
+    dateLabel: ".budget__title--month"
   };
 
   //Format Number into Standard x,xxx.xx format
@@ -259,11 +260,13 @@ var UIController = (function () {
       }
     },
 
+    //Display Percentages on Each List Item
     displayPercentages: function (percentages) {
       var fields = document.querySelectorAll(
         DOMstrings.expensesPercentageLabel
       );
 
+      //Reusable forEach method that can apply to Node Lists
       var nodeListforEach = function (list, callback) {
         for (i = 0; i < list.length; i++) {
           callback(list[i], i);
@@ -277,6 +280,17 @@ var UIController = (function () {
           current.textContent = "n/a";
         }
       });
+    },
+
+    //Retrieve Current Month and Display to UI
+    displayDate: function () {
+      var now, month, months, year;
+      now = new Date();
+      months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      month = months[now.getMonth()];
+      year = now.getFullYear();
+      document.querySelector(DOMstrings.dateLabel).textContent = month + ' ' + year;
+
     },
 
     //Export HTML class name variables as an object for use by other modules
@@ -388,6 +402,7 @@ var controller = (function (budgetCtrl, UICtrl) {
   return {
     init: function () {
       console.log("Application started.");
+      UICtrl.displayDate();
       UICtrl.displayBudget({
         budget: 0,
         totalInc: 0,
