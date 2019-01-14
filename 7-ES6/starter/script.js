@@ -72,3 +72,66 @@ ages6 = years.map((el, index) => {
     return `For the year ${now}, Age Element ${index+1}: ${age}.`
 });
 console.log(ages6);
+
+///////////////////////////////////////////////
+//Arrow Functions Advanced
+
+//ES5 - this keyword not available outside the function (self hack)
+var box5 = {
+    color: 'green',
+    position: 1,
+    clickMe: function () {
+        var self = this;
+        document.querySelector('.green').addEventListener('click', function () {
+            var str = 'This is box number ' + self.position + ' and it is ' + self.color;
+            alert(str);
+        });
+    }
+};
+box5.clickMe();
+
+
+//ES6 - Arrow functions preserve the this keyword
+const box6 = {
+    color: 'green',
+    position: 1,
+    clickMe: function () {
+        document.querySelector('.green').addEventListener('click', () => {
+            var str = 'This is box number ' + this.position + ' and it is ' + this.color;
+            alert(str);
+        });
+    }
+};
+box6.clickMe();
+
+//This version fails because clickMe arrow function preserves the this keyword from before
+//Don't lose track of what 'this' stands for
+// const box66 = {
+//     color: 'green',
+//     position: 1,
+//     clickMe: () => {
+//         document.querySelector('.green').addEventListener('click', () => {
+//             var str = 'This is box number ' + this.position + ' and it is ' + this.color;
+//             alert(str);
+//         });
+//     }
+// };
+// box66.clickMe();
+
+function Person(name) {
+    this.name = name;
+}
+
+//ES5
+Person.prototype.myFriends5 = function (friends) {
+    var arr = friends.map(function (el) {
+        var self = this;
+        var friendList = self.name + ' is friends with ' + el;
+        return friendList;
+    });
+
+    console.log(arr);
+};
+
+var friends = ['Bob', 'Jane', 'Mark'];
+new Person('John').myFriends5(friends);
