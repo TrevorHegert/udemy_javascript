@@ -223,3 +223,22 @@ var ages = [12, 17, 8, 22, 16, 11];
 
 console.log(ages.findIndex(cur => cur >= 18));
 console.log(ages.find(cur => cur >= 18));
+
+///////////////////////////////////////////////////
+//Spread Operator
+
+function addFourAges(a, b, c, d) {
+  return a + b + c + d;
+}
+
+var ages = [18, 30, 12, 21];
+
+//ES5
+var sum2 = addFourAges.apply(null, ages);
+//sum2 = 18 + 30 + 12 + 21 = 81
+
+//ES6
+const sum3 = addFourAges(...ages);
+//... is spread operater, it splits the array into its component elements.
+//This function requires 4 numbers, but with a for loop function could work with any amount of numbers.
+console.log(sum2, sum3);
