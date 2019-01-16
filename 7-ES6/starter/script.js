@@ -217,3 +217,9 @@ for (const current of Array.from(boxes)) {
 
   current.textContent = "I changed to orange!";
 }
+
+//findIndex
+var ages = [12, 17, 8, 22, 16, 11];
+
+console.log(ages.findIndex(cur => cur >= 18));
+console.log(ages.find(cur => cur >= 18));
